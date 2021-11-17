@@ -1,6 +1,10 @@
 const express = require('express')
 const { response } = require('express')
 const app = express()
+
+const cors = require('cors')  //required to allow requests with other origin
+app.use(cors())
+
 app.use(express.json()) //converts json to js object (used in 'post')
 const morgan = require('morgan')
 
@@ -88,7 +92,7 @@ app.post('/api/persons', (request,response) => {
   response.json(newPerson)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001 //env is used for heroku
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
 })
