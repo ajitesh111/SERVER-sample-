@@ -8,6 +8,8 @@ app.use(cors())
 app.use(express.json()) //converts json to js object (used in 'post')
 const morgan = require('morgan')
 
+app.use(express.static('build'))
+
 morgan.token('postBody', (request,response) => {
   if(request.method === 'POST')
     return JSON.stringify(request.body)
