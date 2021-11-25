@@ -22,22 +22,22 @@ morgan.token('postBody', (request,response) => {
 app.use(morgan(':method :url :status :response-time[3] :postBody'))
 
 // let persons = [
-//     { 
+//     {
 //       "id": 1,
-//       "name": "Arto Hellas", 
+//       "name": "Arto Hellas",
 //       "number": "040-123456"
 //     },
-//     { 
+//     {
 //       "id": 2,
-//       "name": "Ada Lovelace", 
+//       "name": "Ada Lovelace",
 //       "number": "39-44-5323523"
 //     },
-//     { 
+//     {
 //       "id": 3,
-//       "name": "Dan Abramov", 
+//       "name": "Dan Abramov",
 //       "number": "12-43-234345"
 //     },
-//     { 
+//     {
 //       "id": 4,
 //       "name": "Mary Poppendick",
 //       "number": "39-23-6423122"
@@ -45,10 +45,10 @@ app.use(morgan(':method :url :status :response-time[3] :postBody'))
 // ]
 
 app.get('/api/persons', (request,response) => {
-    Person.find({}) //no filter, returns all objects
-      .then(persons => {
-        response.json(persons) 
-      })
+  Person.find({}) //no filter, returns all objects
+    .then(persons => {
+      response.json(persons)
+    })
 })
 
 app.get('/api/persons/:id', (request,response,next) => {
@@ -58,8 +58,8 @@ app.get('/api/persons/:id', (request,response,next) => {
         response.json(person)
       else
         response.status(404).end()
-  })
-  .catch(error => next(error))  //send error to the error handling middlewware
+    })
+    .catch(error => next(error))  //send error to the error handling middlewware
 
   // if(person)
   //   response.json(person)
@@ -71,7 +71,7 @@ app.get('/info', (request, response) => {
   Person.find({}).then(persons => {
     response.send(`<div>Phonebook has info for ${persons.length}</div> <br> ${new Date()}`)
   })
-    // response.send(`<div>Phonebook has info for ${persons.length}</div> <br> ${new Date()}`)
+  // response.send(`<div>Phonebook has info for ${persons.length}</div> <br> ${new Date()}`)
 })
 
 app.delete('/api/persons/:id', (request,response,next) => {
@@ -87,13 +87,13 @@ app.delete('/api/persons/:id', (request,response,next) => {
 
 app.put('/api/persons/:id', (request,response,next) => {
   const body = request.body
-  
+
   const person = {
     name: body.name,
     number: body.number
   }
 
-  Person.findByIdAndUpdate(request.params.id, person, {new:true}) //'new' is required otherwise non modified 'person' will be used
+  Person.findByIdAndUpdate(request.params.id, person, { new:true }) //'new' is required otherwise non modified 'person' will be used
     .then(updatedNote => {
       response.json(updatedNote)
     })
@@ -124,7 +124,7 @@ app.post('/api/persons', (request,response,next) => {
   person.save()
     .then(savedPerson => { //schema constraints are checked here (if name already added)
       response.json(savedPerson)
-  })
+    })
     .catch(error => next(error))
 
   // persons = persons.concat(newPerson)
@@ -136,7 +136,7 @@ const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
   if(error.name === 'CastError')
-    return response.status(400).send({error: 'malformatted id'})
+    return response.status(400).send({ error: 'malformatted id' })
   else if(error.name === 'ValidationError')
     return response.status(403).send(error.message)
 
@@ -145,7 +145,7 @@ const errorHandler = (error, request, response, next) => {
 //must be the last middleware to be loaded
 app.use(errorHandler)
 
-const PORT = process.env.PORT // dotenv
+const PORT = process.env.PORT // dotenv for local
 app.listen(PORT, () => {
   console.log(`server running on port ${PORT}`)
 })
