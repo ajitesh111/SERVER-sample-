@@ -100,20 +100,14 @@ app.put('/api/persons/:id', (request,response,next) => {
     .catch(error => next(error))
 })
 
-app.post('/api/persons', (request,response) => {
+app.post('/api/persons', (request,response,next) => {
   const body = request.body
 
-  if(!body.name || !body.number)
-  {
-    return response.status(400).json({
-      error: 'content-missing'
-    })
-  }
-
-  // if(persons.find(person => person.name === body.name))
+  //conditions are defined in the schema definition in person.js
+  // if(!body.name || !body.number)
   // {
-  //   return response.status(409).json({
-  //     error: `a record with name ${body.name} already exists in the phonebook`
+  //   return response.status(400).json({
+  //     error: 'content-missing'
   //   })
   // }
 
@@ -127,9 +121,12 @@ app.post('/api/persons', (request,response) => {
   //   number: body.number
   // }
 
-  person.save().then(savedPerson => {
-    response.json(savedPerson)
+  person.save()
+    .then(savedPerson => { //schema constraints are checked here (if name already added)
+      response.json(savedPerson)
   })
+    .catch(error => next(error))
+
   // persons = persons.concat(newPerson)
   // response.json(newPerson)
 })
@@ -140,6 +137,8 @@ const errorHandler = (error, request, response, next) => {
 
   if(error.name === 'CastError')
     return response.status(400).send({error: 'malformatted id'})
+  else if(error.name === 'ValidationError')
+    return response.status(403).send(error.message)
 
   next(error) //forwards unhandled errors to the default error handler of express
 }
